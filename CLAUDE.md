@@ -2,6 +2,9 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Response Style
+- Always write a brief summary of what was done at the end of every resnponse, add relevant file names if relevant and usewith bullets and/or diagrams, whichever fits better the context
+
 ## Development Commands
 
 ### Running the Application
@@ -11,7 +14,7 @@ chmod +x run.sh
 ./run.sh
 
 # Manual start
-cd backend && uv run uvicorn app:app --reload --port 8000
+cd backend && uv run uvicorn app:app --reload --port 8888
 ```
 
 ### Environment Setup
@@ -72,12 +75,12 @@ Exit code 0 = all checks pass, non-zero = issues found.
 If scripts aren't executable: `chmod +x scripts/*.sh`
 
 ### Application Access
-- Web Interface: http://localhost:8000
-- API Documentation: http://localhost:8000/docs
+- Web Interface: http://localhost:8888
+- API Documentation: http://localhost:8888/docs
 
 ## Architecture Overview
 
-This is a Retrieval-Augmented Generation (RAG) system for course materials with a FastAPI backend and vanilla JavaScript frontend.
+This is a Retrieval-Augmented Generation (RAG) system for course materials with a FastAPI backend and vanilla JavaScript frontend.FastAPI serves both the REST API (`/api/*`) and the static frontend as a single process.
 
 ### Core Components
 
@@ -85,6 +88,8 @@ This is a Retrieval-Augmented Generation (RAG) system for course materials with 
 - Manages document processing, vector storage, AI generation, and search tools
 - Handles course document ingestion from the docs/ directory
 - Processes queries using tool-based search approach
+- On startup, loads course documents from `docs/` — skips courses already indexed (dedup by title)
+- Use `clear_existing=True` in `add_course_folder()` to force a full rebuild of the vector store
 
 **VectorStore (backend/vector_store.py)**: ChromaDB-based vector storage with dual collections
 - `course_catalog`: Stores course titles for name resolution
@@ -109,6 +114,23 @@ This is a Retrieval-Augmented Generation (RAG) system for course materials with 
 4. User queries trigger AI generation with access to search tools
 5. AI uses CourseSearchTool to find relevant content and generates responses
 6. Frontend displays responses with source attribution
+
+### Course Document Format
+
+Files in `docs/` must follow this structure for `DocumentProcessor` to parse them correctly:
+
+```
+Course Title: <title>
+Course Link: <url>
+Course Instructor: <name>
+
+Lesson 1: <title>
+Lesson Link: <url>
+<lesson content...>
+
+Lesson 2: <title>
+...
+```
 
 ### Key Configuration (backend/config.py)
 - Chunk size: 800 characters with 100 character overlap
