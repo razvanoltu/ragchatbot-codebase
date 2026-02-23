@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Response Style
-- Always write a brief summary of what was done at the end of every resnponse, add relevant file names if relevant and usewith bullets and/or diagrams, whichever fits better the context
+- Always write a brief summary of what was done at the end of every resnponse, add relevant file names if relevant and usewith bullets and/or diagrams, whichever fits better the context - Exception: super trivial actions
 
 ## Development Commands
 

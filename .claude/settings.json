@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Read|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -Command \"Add-Content -Path './hook-test.txt' -Value ((Get-Date -Format 'yyyy-MM-dd HH:mm:ss') + ' - All done dude')\""
+          }
+        ]
+      }
+    ]
+  }
+}
